@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="color" id="bgcolor" placeholder="Digite uma cor"/>
+    <input type="text" id="font" placeholder="Digite uma font"/>
+    <input type="text" id="image" placeholder="Digite uma imagem"/>
+    <button id="testar">Testar</button>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus inventore nostrum minima dolorum voluptates, obcaecati magnam quis ex sed, velit vel atque veritatis quia consequuntur voluptas! Ea, error a? Beatae.</p>
+    <img src="" alt="">
+</body>
+<script>
+    const salvarEstilo=()=>{
+        localStorage.setItem('bgcolor', document.getElementById('bgcolor').value)
+         localStorage.setItem('font', document.getElementById('font').value)
+          localStorage.setItem('image', document.getElementById('image').value)
+    }
+
+    const pegarEstilo=()=>{
+        document.body.style.backgroundColor = localStorage.getItem('bgcolor')
+        document.querySelector("p").style.fontFamily = localStorage.getItem("font")
+        document.querySelector("img").setAttribute('src', localStorage.getItem("image"));
+
+    }
+
+function setStyle(){
+salvarEstilo()
+pegarEstilo()
+}
+document.querySelector("#testar").addEventListener("click", setStyle)
+</script>
+</html>
