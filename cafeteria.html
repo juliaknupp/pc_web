@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cafeteria do CEFET-RJ</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      header {
+        height: 70px;
+        width: 100%;
+        margin-top: -10px;
+        margin-bottom: 5px;
+        padding-right: 5px;
+        padding-left: 5px;
+
+        border-radius: 0px 0px 10px 10px;
+        position: fixed;
+        z-index: 1;
+      }
+      body {
+        background-color: rgb(244, 244, 229);
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+      }
+      .container {
+        display: flex;
+        margin-top: 20px;
+      }
+      .menu-area {
+        flex: 3;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .menu-item {
+        border-radius: 50px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 150px;
+        cursor: pointer;
+        text-align: center;
+      }
+      .menu-item img {
+        border-radius: 50px;
+        max-width: 100%;
+        height: auto;
+      }
+      .menu-item:hover {
+        border-radius: 50px;
+        background-color: #f9f9f9;
+      }
+      .cart-area {
+        border-radius: 50px;
+        flex: 1;
+        margin-left: 20px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        height: fit-content;
+      }
+      .cart-area h2 {
+        margin-top: 0;
+      }
+      .cart-area ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+      .cart-area li {
+        margin-bottom: 5px;
+      }
+      .cart-total {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Cafeteria do CEFET-RJ</h1>
+    </header>
+    <div class="container">
+      <div class="menu-area" id="menu"></div>
+      <div class="cart-area">
+        <h2>Itens Comprados</h2>
+        <ul id="cart-items"></ul>
+        <p class="cart-total">Total: R$ <span id="total">0.00</span></p>
+      </div>
+    </div>
+    <script>
+      let cart = [];
+      let total = 0;
+
+      fetch("cardapio.json")
+        .then((response) => response.json())
+        .then((data) => {
+          const menuArea = document.getElementById("menu");
+          data.forEach((item) => {
+            let itemDiv = document.createElement("div");
+            itemDiv.className = "menu-item";
+            itemDiv.innerHTML = `
+                        <img src="${item.img}" alt="${item.nome}">
+                        <h3>${item.nome}</h3>
+                        <p>R$ ${item.preco.toFixed(2)}</p>
+                    `;
+
+            itemDiv.addEventListener("click", function () {
+              addToCart(item);
+            });
+            menuArea.appendChild(itemDiv);
+          });
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar o cardápio:", error);
+        });
+
+      function addToCart(item) {
+        cart.push(item);
+        total += item.preco;
+        updateCartDisplay();
+      }
+
+      function updateCartDisplay() {
+        const cartItemsList = document.getElementById("cart-items");
+        const totalElement = document.getElementById("total");
+        cartItemsList.innerHTML = "";
+        cart.forEach((item) => {
+          let li = document.createElement("li");
+          li.textContent = item.nome + " - R$ " + item.preco.toFixed(2);
+          cartItemsList.appendChild(li);
+        });
+        totalElement.textContent = total.toFixed(2);
+      }
+    </script>
+    <footer></footer>
+  </body>
+</html>

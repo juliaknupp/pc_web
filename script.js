@@ -1,55 +1,44 @@
-const itens = [
-  {
-    nome: "Café Espresso",
-    preco: 8.0,
-    img: "https://uploads.metroimg.com/wp-content/uploads/2019/10/17184313/190115JB-Koppe-cafes-especiais-0121.jpg",
-  },
-  {
-    nome: "Capuccino",
-    preco: 12.0,
-    img: "https://www.minhareceita.com.br/app/uploads/2024/07/mobile-capuccino.jpg",
-  },
-  {
-    nome: "Suco de Laranja",
-    preco: 10.0,
-    img: "https://cardapio.primeirobar.com.br/wp-content/uploads/2022/04/laranja.jpg",
-  },
-  {
-    nome: "Água mineral",
-    preco: 6.0,
-    img: "https://fontagua.com.br/wp-content/uploads/2019/02/splash_350ml.jpg",
-  },
-  {
-    nome: "Fatia de bolo",
-    preco: 12.0,
-    img: "https://cdn.awsli.com.br/2500x2500/2658/2658919/produto/257217444/fatia-de-bolo-vegano-de-brigadeiro-com-morangos-sem-gl-ten-fnv2j0u5hp.png",
-  },
-  {
-    nome: "Sanduíche natural",
-    preco: 15.0,
-    img: "https://guiadacozinha.com.br/wp-content/uploads/2014/01/Sanduiche-natural-768x619.jpg",
-  },
-  {
-    nome: "Croissant",
-    preco: 17.0,
-    img: "https://www.fornodeminas.com.br/wp-content/uploads/2018/06/croissant.jpg",
-  },
-];
+let cart = [];
+let total = 0;
 
-const cafet = document.getElementById("cardapio");
-let i =0;
-itens forEach item =>
-    let li = document.createElement('li');
-    li textContent = item nome;
-    cardapio.appendChild(li);
+fetch("cardapio.json")
+  .then((response) => response.json())
+  .then((data) => {
+    const menuArea = document.getElementById("menu");
+    data.forEach((item) => {
+      let itemDiv = document.createElement("div");
+      itemDiv.className = "menu-item";
+      itemDiv.innerHTML = `
+                        <img src="${item.img}" alt="${item.nome}">
+                        <h3>${item.nome}</h3>
+                        <p>R$ ${item.preco.toFixed(2)}</p>
+                    `;
 
-    let preco = document.createElement('p')
-    preco textContent ='R$'+ item preco;
-    li.appendChild(preco);
+      itemDiv.addEventListener("click", function () {
+        addToCart(item);
+      });
+      menuArea.appendChild(itemDiv);
+    });
+  })
+  .catch((error) => {
+    console.error("Erro ao carregar o cardápio:", error);
+  });
 
-    let img = document.createElement('img')
-    img scr =item img;
-    li.appendChild(img);
+function addToCart(item) {
+  cart.push(item);
+  total += item.preco;
+  updateCartDisplay();
+}
 
-    let botao = document.createElement('button');
-    
+// Função para atualizar a exibição do carrinho
+function updateCartDisplay() {
+  const cartItemsList = document.getElementById("cart-items");
+  const totalElement = document.getElementById("total");
+  cartItemsList.innerHTML = "";
+  cart.forEach((item) => {
+    let li = document.createElement("li");
+    li.textContent = item.nome + " - R$ " + item.preco.toFixed(2);
+    cartItemsList.appendChild(li);
+  });
+  totalElement.textContent = total.toFixed(2);
+}
